@@ -549,6 +549,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #endif
 
         [Test]
+        public void MockFileInfo_MoveToOnlyCaseChanging_ShouldSucceed()
+        {
+            string sourceFilePath = XFS.Path(@"c:\temp\file.txt");
+            string destFilePath = XFS.Path(@"c:\temp\FILE.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData("1")},
+            });
+
+            var fileInfo = fileSystem.FileInfo.FromFileName(sourceFilePath);
+            fileInfo.MoveTo(destFilePath);
+
+            Assert.AreEqual(fileInfo.FullName, destFilePath);
+            Assert.True(fileInfo.Exists);
+        }
+
+        [Test]
         public void MockFileInfo_CopyTo_ThrowsExceptionIfSourceDoesntExist()
         {
             var fileSystem = new MockFileSystem();
